@@ -1,6 +1,7 @@
 #lang racket
 
 (require "parsertools.rkt")
+(provide command)
 
 #|
 alphanum     ::= [0-9a-zA-Z_-]
@@ -130,7 +131,12 @@ command      ::= query | modeChange
 (define termquery
   (parse/apply
     (λ (x)
-       (list 'term (car x) (caddr x) (string=? "%" (cadddr x))))
+       (list 'term
+             (cond
+               [(string=? (car x) "subj") 'subj]
+               [(string=? (car x) "body") 'body]
+               [(string=? (car x) "") 'both])
+             (caddr x) (string=? "%" (cadddr x))))
     (parse/and
       (parse/? termprefix)
       (parse/* (parse/whitespace))
@@ -164,8 +170,10 @@ command      ::= query | modeChange
     modechange
     query))
 
+#|
 (command "subj:gas body:earning")
 (command "bcc:testy@test.ca")
 (command "date>1998/12/08")
 (command "output=full")
 (command "output=brief")
+|#

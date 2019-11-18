@@ -5,4 +5,4 @@
 
 (define-ffi-definer define-jbdb (ffi-lib "./jbdblib"))
 
-(define-jbdb testhello (_fun -> _int))
+(define-jbdb testhello (_fun _int -> _int))

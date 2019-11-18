@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int testhello() {
+int testhello(int x) {
     printf("Hello from C!\n");
-    return 3;
+    return x;
 }
