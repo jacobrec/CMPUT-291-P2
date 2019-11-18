@@ -1,7 +1,6 @@
 *.ss~
 *.ss#*
 .#*.ss
-src/*.txt
 
 *.scm~
 *.scm#*
@@ -9,3 +8,7 @@ src/*.txt
 *.xml
 src/*tmp*
 *.so
+testing/emails.txt
+testing/recs.txt
+testing/terms.txt
+testing/dates.txt

@@ -33,6 +33,7 @@
 
   (set! s (string-replace s #px"\n" "&#10;"))
   (set! s (string-replace s #px"'" "&apos;"))
+  (set! s (string-replace s #px"\"" "&quot;"))
 
   (displayln s rec-file))
 
@@ -61,7 +62,8 @@
   (define (do-email-type type loc-th)
     (define t-email (get-item-from-email ele loc-th))
     (when (non-empty-string? t-email)
-      (add-email type t-email row)))
+      (for ([e (string-split t-email ",")])
+        (add-email type e row))))
 
   (do-email-type "from" third)
   (do-email-type "to" fourth)
@@ -84,6 +86,8 @@
   (define (finish type str)
     (set! str
       (string-replace str #px"[^(0-9)|(a-z)|(A-Z)|_|\\-|\\s]" " "))
+    (set! str
+      (string-replace str #px"[\\(|\\)]" " "))
     (set! str (string-downcase str))
     (for ([s (string-split str)])
       (when (> (string-length s) 2)
