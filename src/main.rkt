@@ -22,7 +22,7 @@
   (unless (or (eof-object? input) (string=? input "exit"))
     (define cmd (command input))
     (if (or (eq? 'fail (car cmd))
-            (non-empty-string? (cdr cmd)))
+            (not (string=? "" (cadr cmd))))
       (displayln "invalid command")
       (process-command (car cmd)))
     (main))
