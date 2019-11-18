@@ -17,8 +17,7 @@
 
 (define term-file (open-output-file "term.txt"))
 (define (add-term type t row)
-  (fprintf term-file "~a-~a:~a~%" type t row)
-  (printf "~a-~a:~a~%" type t row))
+  (fprintf term-file "~a-~a:~a~%" type t row))
 (define (parse-terms ele)
   ; Get row number
   (define row
@@ -27,6 +26,8 @@
         (element-content
           (first
             (element-content ele))))))
+
+  ; parses together several pcdata's into one string
   (define (get-text xml)
     (apply string-append
       (for/list ([v xml])
