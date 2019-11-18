@@ -16,6 +16,19 @@
     (loop)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This makes the date file ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define date-file (open-output-file "dates.txt" #:exists 'replace))
+(define (add-date t row)
+  (fprintf date-file "~a:~a~%" t row))
+(define (parse-dates ele)
+  (define row (get-row ele))
+
+  (define date (get-item-from-email ele second))
+  (add-date date row))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This makes the email file ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define email-file (open-output-file "emails.txt" #:exists 'replace))
@@ -82,4 +95,5 @@
 (process-mail-xml-file "10.xml"
                        (lambda (element)
                         (parse-terms element)
-                        (parse-emails element)))
+                        (parse-emails element)
+                        (parse-dates element)))
