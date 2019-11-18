@@ -15,37 +15,27 @@
       (loop))
     (loop)))
 
-(define term-file (open-output-file "term.txt"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This makes the email file ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define email-file (open-output-file "emails.txt"))(define (add-email type t row)
+                                                     (fprintf email-file "~a-~a:~a~%" type t row))
+(define (parse-emails ele)
+  (define row (get-row ele))
+  (define to-email (get-item-from-email ele fourth))
+  (define from-email (get-item-from-email ele third))
+  1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This makes the term file ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define term-file (open-output-file "terms.txt"))
 (define (add-term type t row)
   (fprintf term-file "~a-~a:~a~%" type t row))
 (define (parse-terms ele)
-  ; Get row number
-  (define row
-    (pcdata-string
-      (first
-        (element-content
-          (first
-            (element-content ele))))))
-
-  ; parses together several pcdata's into one string
-  (define (get-text xml)
-    (apply string-append
-      (for/list ([v xml])
-        (string-append " " (pcdata-string v) " "))))
-
-  ; Get subject
-  (define subj
-    (get-text
-      (element-content
-        (fifth
-          (element-content ele)))))
-
-  ; Get body
-  (define body
-    (get-text
-      (element-content
-        (eighth
-          (element-content ele)))))
+  (define row (get-row ele))
+  (define subj (get-item-from-email ele fifth))
+  (define body (get-item-from-email ele eighth))
 
   ; transform and process data
   (define (finish type str)
@@ -60,6 +50,22 @@
 
 
 
+; Get nth xml text
+(define (get-item-from-email ele loc-th)
+  (get-text
+    (element-content
+      (loc-th
+        (element-content ele)))))
+
+; Get row number
+(define (get-row email-xml)
+  (string-trim (get-item-from-email email-xml first)))
+
+; parses together several pcdata's into one string
+(define (get-text xml)
+  (apply string-append
+    (for/list ([v xml])
+      (string-append " " (pcdata-string v) " "))))
 
 
 ;; For testing
