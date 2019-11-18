@@ -1,7 +1,7 @@
 # CMPUT-291-P2
 ## Steps
-- [] Read XML file
-- [] Build Indicies files
+- [x] Read XML file
+- [x] Build Indicies files
 - [] Do querying
 
 ## Plan
@@ -13,10 +13,12 @@ close file
 throw error messages if file is invalid
 
 ### Build Indices
-Read the description and figure this part out
-Will likely need to integrate with the ffi library
+Basically some bash stuff to build the indicies, its in phase2.sh
 
 ### Do querying
-Parse the text to commands
+Parse the text to commands. This part is done
+
 query ffi with commands
-try and reuse sqlify display for those nice box drawing characters
+
+See here for the c interface
+https://docs.oracle.com/cd/E17276_01/html/api_reference/C/frame_main.html
