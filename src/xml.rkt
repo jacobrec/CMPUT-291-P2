@@ -17,4 +17,4 @@
 
 
 ;; For testing
-(process-mail-xml-file "src/10.xml" displayln)
+(process-mail-xml-file "10.xml" displayln)
