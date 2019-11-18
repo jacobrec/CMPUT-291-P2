@@ -18,7 +18,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This makes the email file ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define email-file (open-output-file "emails.txt"))
+(define email-file (open-output-file "emails.txt" #:exists 'replace))
 (define (add-email type t row)
   (fprintf email-file "~a-~a:~a~%" type t row))
 (define (parse-emails ele)
@@ -37,7 +37,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This makes the term file ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define term-file (open-output-file "terms.txt"))
+(define term-file (open-output-file "terms.txt" #:exists 'replace))
 (define (add-term type t row)
   (fprintf term-file "~a-~a:~a~%" type t row))
 (define (parse-terms ele)
