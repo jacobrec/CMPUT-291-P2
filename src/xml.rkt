@@ -16,6 +16,27 @@
     (loop)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This makes the recs file ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define rec-file (open-output-file "recs.txt" #:exists 'replace))
+(define (add-rec t row)
+  (fprintf date-file "~a:~a~%" row t))
+(define (parse-recs ele)
+  (define row (get-row ele))
+  (display row rec-file)
+  (display ":" rec-file)
+
+  (define xml-str (open-output-string))
+  (write-xml/content ele xml-str)
+  (define s (get-output-string xml-str))
+
+  (set! s (string-replace s #px"\n" "&#10;"))
+  (set! s (string-replace s #px"'" "&apos;"))
+
+  (displayln s rec-file))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This makes the date file ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define date-file (open-output-file "dates.txt" #:exists 'replace))
@@ -28,9 +49,9 @@
   (add-date date row))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This makes the email file ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define email-file (open-output-file "emails.txt" #:exists 'replace))
 (define (add-email type t row)
   (fprintf email-file "~a-~a:~a~%" type t row))
@@ -96,4 +117,5 @@
                        (lambda (element)
                         (parse-terms element)
                         (parse-emails element)
-                        (parse-dates element)))
+                        (parse-dates element)
+                        (parse-recs element)))
