@@ -12,3 +12,4 @@ testing/emails.txt
 testing/recs.txt
 testing/terms.txt
 testing/dates.txt
+testing/*.idx
