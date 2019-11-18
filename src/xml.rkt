@@ -1,11 +1,12 @@
 #lang racket
 (require xml)
+(provide process-mail-xml-file
+         phase1-process-elements)
 
 ;; Takes in a file, and a function
 ; It will process the elements in the xml file one at a time
 ; Calling that function on each of them
-(define (process-mail-xml-file file fn)
-  (define in (open-input-file file))
+(define (process-mail-xml-file in fn)
   (define doctype (read-line in))
   (define email-array (read-line in))
   (with-handlers ([exn:xml? (lambda (exn)
@@ -111,11 +112,10 @@
       (for/list ([v xml])
         (string-append " " (pcdata-string v) " ")))))
 
+(define (phase1-process-elements element)
+  (parse-terms element)
+  (parse-emails element)
+  (parse-dates element)
+  (parse-recs element))
 
-;; For testing
-(process-mail-xml-file "10.xml"
-                       (lambda (element)
-                        (parse-terms element)
-                        (parse-emails element)
-                        (parse-dates element)
-                        (parse-recs element)))
+

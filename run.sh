@@ -2,4 +2,5 @@ cd src
 cd c
 make
 cd ../
-racket main.rkt
+
+cat 10.xml | racket phase1.rkt
