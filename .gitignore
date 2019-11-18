@@ -1,8 +1,10 @@
 *.ss~
 *.ss#*
 .#*.ss
+src/*.txt
 
 *.scm~
 *.scm#*
 .#*.scm
 *.xml
+src/*tmp*
