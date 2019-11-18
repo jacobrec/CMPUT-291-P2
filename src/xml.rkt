@@ -18,13 +18,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This makes the email file ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define email-file (open-output-file "emails.txt"))(define (add-email type t row)
-                                                     (fprintf email-file "~a-~a:~a~%" type t row))
+(define email-file (open-output-file "emails.txt"))
+(define (add-email type t row)
+  (fprintf email-file "~a-~a:~a~%" type t row))
 (define (parse-emails ele)
   (define row (get-row ele))
-  (define to-email (get-item-from-email ele fourth))
-  (define from-email (get-item-from-email ele third))
-  1)
+  (define (do-email-type type loc-th)
+    (define t-email (get-item-from-email ele loc-th))
+    (when (non-empty-string? t-email)
+      (add-email type t-email row)))
+
+  (do-email-type "from" third)
+  (do-email-type "to" fourth)
+  (do-email-type "cc" sixth)
+  (do-email-type "bcc" seventh))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This makes the term file ;;
@@ -39,7 +47,8 @@
 
   ; transform and process data
   (define (finish type str)
-    (set! str (string-replace str #px"[^(0-9)|(a-z)|(A-Z)|_|\\-|\\s]" " "))
+    (set! str
+      (string-replace str #px"[^(0-9)|(a-z)|(A-Z)|_|\\-|\\s]" " "))
     (set! str (string-downcase str))
     (for ([s (string-split str)])
       (when (> (string-length s) 2)
@@ -59,16 +68,18 @@
 
 ; Get row number
 (define (get-row email-xml)
-  (string-trim (get-item-from-email email-xml first)))
+  (get-item-from-email email-xml first))
 
 ; parses together several pcdata's into one string
 (define (get-text xml)
-  (apply string-append
-    (for/list ([v xml])
-      (string-append " " (pcdata-string v) " "))))
+  (string-trim
+    (apply string-append
+      (for/list ([v xml])
+        (string-append " " (pcdata-string v) " ")))))
 
 
 ;; For testing
 (process-mail-xml-file "10.xml"
                        (lambda (element)
-                        (parse-terms element)))
+                        (parse-terms element)
+                        (parse-emails element)))
