@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <db.h>
 #include "set.h"
 
@@ -9,10 +10,11 @@
 
 struct database {
     DB* terms;
+    DB* recs;
 };
 typedef struct database JDB;
 
-// For debugging only
+// ls: For debugging only
 void ls() {
     char *args[2];
     args[0] = "/bin/ls";
@@ -21,26 +23,46 @@ void ls() {
         execv(args[0], args);
 }
 
+// Print database error message only if there is one
+// Used on the result of any db-> call
 void errorif(int x, const char* msg) {
     if (x)
         printf("%s: %s\n", msg, db_strerror(x));
 }
 
-void setupDB(DB** db, const char* loc) {
+// Initialize a database from a file
+void setupDB(DB** db, const char* loc, int type) {
     int x = db_create(db, NULL, 0);
     errorif(x, "db_create");
 
-    (*db)->set_flags(*db, DB_DUP);
-    x = (*db)->open(*db, NULL, loc, NULL, DB_BTREE, DB_RDONLY, 0664);
+    if (type == DB_BTREE) {
+        (*db)->set_flags(*db, DB_DUP);
+    }
+    x = (*db)->open(*db, NULL, loc, NULL, type, DB_RDONLY, 0664);
 
     errorif(x, "db->open");
 }
 
+// Close a database connection
+void cleanup(DB** db) {
+    (*db)->close(*db, 0);
+}
+
+// setup the struct containing all databases
 void setup(JDB* jdb) {
-    setupDB(&jdb->terms, PATH"te.idx");
+    setupDB(&jdb->terms, PATH"te.idx", DB_BTREE);
+    setupDB(&jdb->recs, PATH"re.idx", DB_HASH);
+}
+
+// clean up the struct containing all the databases
+void cleanup_databases(JDB* jdb) {
+    cleanup(&jdb->terms);
+    cleanup(&jdb->recs);
+    free(jdb);
 }
 
 
+// Helper that converts a numeric data value to an actual number
 int dataToNumber(char* data, int len) {
     char buf[len+1];
     strncpy(buf, data, len);
@@ -79,14 +101,62 @@ void getTerms(DB* db, char* ks, int kl, bool isWild) {
     } while (ret != DB_NOTFOUND);
 }
 
-#define SEARCH "b-out"
-int query() {
+
+// Gets the xml from the database and prints it for a single row
+void display_row(JDB* jdb, int row, bool fullMode) {
+    DBC* dbcp;
+    DB* db = jdb->recs;
+    int ret;
+
+    ret = db->cursor(db, NULL, &dbcp, 0);
+    errorif(ret, "cursor");
+
+    DBT key, data;
+    memset(&key, 0, sizeof(key));
+    memset(&data, 0, sizeof(data));
+    key.size = 1 + log10(row);
+    char buf[key.size+1];
+    sprintf(buf, "%d", row);
+    key.data = &buf[0];
+
+    // Debug printing
+    // printf("Key: data[%.*s] len[%d]\n", key.size, (char*)key.data, key.size);
+    // printf("Buf: %s\n", buf);
+
+    ret = dbcp->c_get(dbcp, &key, &data, DB_SET);
+    errorif(ret, "cursor");
+
+    printf("Row[%d]: %.*s\n", row, data.size, data.data);
+}
+
+// Display the whole set, if time, do some nice box drawing formatting
+void display_set(JDB* jdb, Set* s, bool fullMode) {
+    for (int i = 0; i < s->bucketLength; i++) {
+        if (s->buckets[i] > 0) {
+            display_row(jdb, s->buckets[i], fullMode);
+        }
+    }
+}
+
+Set* query(Set* set, JDB* jdb) {
+
+    Set* s = set_new();
+    set_add(s, 5);
+    set_add(s, 11);
+    set_add(s, 12);
+    set_add(s, 13);
+    //display_set(jdb, s, false);
+
+    return s;
+}
+
+Set* emptyset() {
+    return set_new();
+}
+
+JDB* setup_databases() {
     JDB* jdb = malloc(sizeof(JDB));
     setup(jdb);
-
-    return 3;
+    return jdb;
 }
 
-int main() {
-    query();
-}

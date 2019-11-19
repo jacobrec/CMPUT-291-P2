@@ -6,6 +6,7 @@ struct set {
     int* buckets;
     int bucketLength;
     int size;
+    bool isUsed;
 };
 typedef struct set Set;
 

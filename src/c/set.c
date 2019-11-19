@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "set.h"
 
 Set* set_new_size(int bl) {
@@ -8,6 +9,7 @@ Set* set_new_size(int bl) {
 
     s->bucketLength = bl;
     s->buckets = malloc(sizeof(int) * s->bucketLength);
+    memset(s->buckets, 0, sizeof(int) * s->bucketLength);
     s->size = 0;
 }
 void rebuild(Set* set) {
@@ -45,11 +47,14 @@ bool find(Set* set, int item, int** ptrptr) {
 }
 
 Set* set_new() {
-    return set_new_size(100);
+    Set* s = set_new_size(100);
+    s->isUsed = false;
+    return s;
 }
 
 void set_add(Set* set, int item) {
     int* ptr;
+    set->isUsed = true;
     if (!find(set, item, &ptr)) {
         *ptr = item;
         set->size++;
@@ -76,6 +81,7 @@ void set_clear(Set* s) {
     s->bucketLength = 100;
     s->size = 0;
     s->buckets = realloc(s->buckets, sizeof(int) * s->bucketLength);
+    memset(s->buckets, 0, sizeof(int) * s->bucketLength);
 }
 
 void set_intersect(Set* set, Set* other) {
