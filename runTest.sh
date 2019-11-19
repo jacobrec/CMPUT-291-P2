@@ -1,7 +1,8 @@
 #!/bin/bash
 
 cd src/c
-make
+make runtest > /dev/null
+make > /dev/null
 cd ../ # in src
 
 cd ../testing

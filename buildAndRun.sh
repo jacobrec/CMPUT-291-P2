@@ -1,6 +1,6 @@
 #!/bin/bash
 cd src/c
-make
+make > /dev/null
 cd ../ # in src
 
 cd ../testing

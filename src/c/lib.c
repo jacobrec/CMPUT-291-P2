@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <db.h>
+#include "set.h"
 
 #define PATH "../testing/"
 
@@ -83,8 +84,6 @@ int query() {
     JDB* jdb = malloc(sizeof(JDB));
     setup(jdb);
 
-
-    printf("Hello from C!\nTime for DB!\n");
     return 3;
 }
 
