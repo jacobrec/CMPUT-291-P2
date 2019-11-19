@@ -2,7 +2,8 @@
 ## Steps
 - [x] Read XML file
 - [x] Build Indicies files
-- [] Do querying
+- [x] Parse Commands
+- [ ] Do querying
 
 ## Plan
 ### XML
