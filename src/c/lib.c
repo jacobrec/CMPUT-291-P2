@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,7 +39,20 @@ void setup(JDB* jdb) {
     setupDB(&jdb->terms, PATH"te.idx");
 }
 
-void getItem(DB* db) {
+
+int dataToNumber(char* data, int len) {
+    char buf[len+1];
+    strncpy(buf, data, len);
+    buf[len] = 0;
+    return atoi(buf);
+}
+
+/**
+ * This function will get iterate over all the items whose term is equal to the
+ * key. If isWild is set, it will also iterate over items whose key begins with
+ * the key. This will be used for the term queries.
+ */
+void getTerms(DB* db, char* ks, int kl, bool isWild) {
     int ret;
     DBC* dbcp;
     ret = db->cursor(db, NULL, &dbcp, 0);
@@ -47,23 +61,28 @@ void getItem(DB* db) {
     memset(&key, 0, sizeof(key));
     memset(&data, 0, sizeof(data));
 
-    char* ks = "s-vision";
     key.data = ks;
-    key.size = sizeof(ks);
+    key.size = kl-1;
     ret = dbcp->c_get(dbcp, &key, &data, DB_SET_RANGE);
-    errorif(ret, "db->get");
-    if (data.data != NULL) {
-        printf("data: %s\n", (char*)data.data);
-    } else {
-        printf("no data\n");
-    }
+    do {
+        errorif(ret, "dbcp->c_get");
+        if (data.data != NULL && (strncmp(ks, key.data, kl-1) == 0) &&
+                (isWild || strlen(ks) == key.size)) {
+            printf("key: %.*s | data: %d\n",
+                     key.size, (char*)key.data,
+                    dataToNumber(data.data, data.size));
+        } else {
+            break;
+        }
+        ret = dbcp->c_get(dbcp, &key, &data, DB_NEXT);
+    } while (ret != DB_NOTFOUND);
 }
 
+#define SEARCH "b-out"
 int query() {
     JDB* jdb = malloc(sizeof(JDB));
     setup(jdb);
 
-    getItem(jdb->terms);
 
     printf("Hello from C!\nTime for DB!\n");
     return 3;
