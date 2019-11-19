@@ -3,6 +3,9 @@
 (require ffi/unsafe
          ffi/unsafe/define)
 
+(define libdb (ffi-lib "libdb"))
 (define-ffi-definer define-jbdb (ffi-lib "./jbdblib"))
 
-(define-jbdb testhello (_fun _int -> _int))
+(define-jbdb query (_fun -> _int))
+
+(query)

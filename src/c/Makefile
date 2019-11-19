@@ -3,7 +3,7 @@ buildlib: jbdblib.so
 	make clean
 
 jbdblib.so: lib.o
-	gcc $< -shared -o $@
+	gcc -ldb $< -shared -o $@
 
 %.o: %.c
 	gcc -c $<

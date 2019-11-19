@@ -3,8 +3,10 @@
 function make_btree () {
     sort -u $1              |
         ../src/break.pl     |
-        db_load -T -t btree $2
+        db_load -c duplicates=1 -T -t btree $2
 }
+
+rm *.idx -f
 
 make_btree terms.txt te.idx
 
