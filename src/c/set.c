@@ -88,6 +88,10 @@ void set_intersect(Set* set, Set* other) {
 
 }
 
+void set_union(Set* set, Set* other) {
+
+}
+
 void set_delete(Set* set) {
     free(set->buckets);
     free(set);

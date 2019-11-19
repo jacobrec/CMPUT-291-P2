@@ -16,5 +16,6 @@ void set_remove(Set* set, int item);
 bool set_has(Set* set, int item);
 void set_clear(Set* set);
 void set_intersect(Set* set, Set* other);
+void set_union(Set* set, Set* other);
 void set_delete(Set* set);
 #endif

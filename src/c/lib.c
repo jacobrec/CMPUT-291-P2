@@ -75,7 +75,7 @@ int dataToNumber(char* data, int len) {
  * key. If isWild is set, it will also iterate over items whose key begins with
  * the key. This will be used for the term queries.
  */
-void getTerms(DB* db, char* ks, int kl, bool isWild) {
+void getTerms(DB* db, Set* join, char* ks, int kl, bool isWild) {
     int ret;
     DBC* dbcp;
     ret = db->cursor(db, NULL, &dbcp, 0);
@@ -83,6 +83,13 @@ void getTerms(DB* db, char* ks, int kl, bool isWild) {
     DBT key, data;
     memset(&key, 0, sizeof(key));
     memset(&data, 0, sizeof(data));
+    bool isNewSet = !join->isUsed;
+    Set* s;
+    if (isNewSet) {
+        s = join;
+    } else {
+        s = set_new();
+    }
 
     key.data = ks;
     key.size = kl-1;
@@ -91,14 +98,20 @@ void getTerms(DB* db, char* ks, int kl, bool isWild) {
         errorif(ret, "dbcp->c_get");
         if (data.data != NULL && (strncmp(ks, key.data, kl-1) == 0) &&
                 (isWild || strlen(ks) == key.size)) {
+            set_add(s, dataToNumber(data.data, data.size));
+            /* // debug printing
             printf("key: %.*s | data: %d\n",
                      key.size, (char*)key.data,
                     dataToNumber(data.data, data.size));
+            // */
         } else {
             break;
         }
         ret = dbcp->c_get(dbcp, &key, &data, DB_NEXT);
     } while (ret != DB_NOTFOUND);
+    if (!isNewSet) {
+        set_intersect(join, s);
+    }
 }
 
 
@@ -136,6 +149,12 @@ void display_set(JDB* jdb, Set* s, bool fullMode) {
             display_row(jdb, s->buckets[i], fullMode);
         }
     }
+}
+
+Set* queryTerm(JDB* jdb, Set* set,
+        char* search, int searchLen, bool isWild) {
+    getTerms(jdb->terms, set, search, searchLen, isWild);
+    return set;
 }
 
 Set* query(Set* set, JDB* jdb) {
