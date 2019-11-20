@@ -157,11 +157,18 @@ void display_set(JDB* jdb, Set* s, bool fullMode) {
     }
 }
 
+// Queries by term, expects search to be in the form s-term
+// or b-term
 Set* queryTerm(JDB* jdb, Set* set,
         char* search, int searchLen, bool isWild) {
     getTerms(jdb->terms, set, search, searchLen, isWild);
     return set;
 }
+
+// Queries by term taking the union of the results, expects
+// search to be in the form s-term or b-term. search should
+// probably be s-term, and search2 should be b-term, or other
+// way around
 Set* queryTerm2(JDB* jdb, Set* set,
         char* search, char* search2, int searchLen, bool isWild) {
     Set* other = set_copy(set);
