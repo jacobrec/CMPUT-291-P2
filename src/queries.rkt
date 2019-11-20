@@ -60,7 +60,7 @@
          (set! min-date (string-max min-date (inc-date (caddr q))))]
         [(string=? (cadr q) ":")
          (set! min-date (string-max min-date (caddr q)))
-         (set! max-date (string-min (inc-date max-date) (caddr q)))]
+         (set! max-date (string-min max-date (inc-date (caddr q))))]
         [(string=? (cadr q) "<=")
          (set! max-date (string-min max-date (inc-date (caddr q))))]
         [(string=? (cadr q) ">=")
