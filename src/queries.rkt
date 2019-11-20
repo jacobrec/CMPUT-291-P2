@@ -23,5 +23,7 @@
          (query-term jdb resultset (caddr q) (cadr q) (cadddr q)))]
       [(eq? (car q) 'email)
        (set! resultset
-         (query-email jdb resultset (caddr q) (cadr q)))]))
+         (query-email jdb resultset (caddr q) (cadr q)))]
+      [(eq? (car q) 'date)
+       (displayln "Date queries not yet supported")]))
   (display_set jdb resultset #t))

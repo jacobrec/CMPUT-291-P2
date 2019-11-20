@@ -67,7 +67,7 @@ command      ::= query | modeChange
   (parse/around
     (parse/lit "date")
     (parse/* (parse/whitespace))
-    (parse/or-lit ":" ">" "<" ">=" "<=")))
+    (parse/or-lit ":" ">=" "<=" ">" "<")))
 
 (define datequery
   (parse/apply
