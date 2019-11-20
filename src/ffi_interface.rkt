@@ -3,7 +3,8 @@
 (require ffi/unsafe
          ffi/unsafe/define)
 
-(provide emptyset
+(provide jdb
+  emptyset
   query-term
   setup_databases
   cleanup_databases)
@@ -47,10 +48,4 @@
          (query result-set (string-append "b-" term))]))
 
 
-;; Tests
 (define jdb (setup_databases))
-(define resultset (emptyset))
-(set! resultset (query-term jdb resultset "ga" 'both #t))
-(set! resultset (query-term jdb resultset "ga" 'subj #t))
-(display_set jdb resultset #t)
-(cleanup_databases jdb)

@@ -9,7 +9,7 @@
 (define (process-command cmd)
   (case (car cmd)
     [(mode) (change-mode (second cmd))]
-    [(query) (do-query (second cmd) full-output)]))
+    [(query) (do-query (drop cmd 1) full-output)]))
 
 (define (change-mode mode)
   (case mode
@@ -30,3 +30,4 @@
     (displayln "")))
 
 (main)
+(cleanup_databases jdb)
