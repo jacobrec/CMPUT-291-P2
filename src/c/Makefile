@@ -1,5 +1,5 @@
 DFLAGS=-g -ldb
-FLAGS=-ldb -fPIC
+FLAGS=-fPIC
 CC=gcc
 buildlib: jbdblib.so
 	mv jbdblib.so ../jbdblib.so
@@ -9,7 +9,7 @@ debug: lib.d.o set.d.o
 	$(CC) $(DFLAGS) $^ -o $@
 
 jbdblib.so: lib.o set.o
-	$(CC) $(FLAGS) $^ -shared -o $@
+	$(CC) $(FLAGS) -ldb $^ -shared -o $@
 
 %.o: %.c
 	$(CC) $(FLAGS) -c $^
