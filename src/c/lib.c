@@ -180,7 +180,7 @@ void display_row(JDB* jdb, int row, bool fullMode) {
     errorif(ret, "cursor");
 
     if (fullMode) {
-        printf("Row[%d]: %.*s\n", row, data.size, data.data);
+        printf("Row[%d]: %.*s\n", row, data.size, (char*)data.data);
     } else {
         printf("Row[%d]: TODO [print subject]\n", row);
     }

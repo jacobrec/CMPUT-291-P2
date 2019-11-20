@@ -1,5 +1,5 @@
 DFLAGS=-g -ldb
-FLAGS=-fPIC
+FLAGS=-fPIC -Wall
 CC=gcc
 buildlib: jbdblib.so
 	mv jbdblib.so ../jbdblib.so
