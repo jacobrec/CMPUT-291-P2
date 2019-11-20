@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "set.h"
 
-int test_set() {
+void test_set() {
     Set* s = set_new();
     set_add(s, 1);
     assert(s->size == 1);
