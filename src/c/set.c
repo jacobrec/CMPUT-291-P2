@@ -4,6 +4,17 @@
 #include <string.h>
 #include "set.h"
 
+void set_overwrite(Set* set, Set* from) {
+    free(set->buckets);
+    set->buckets = from->buckets;
+    set->load = from->load;
+    set->size = from->size;
+    set->bucketLength = from->bucketLength;
+    set->isUsed = from->isUsed;
+    free(from);
+}
+
+
 Set* set_new_size(int bl) {
     Set* s = malloc(sizeof(Set));
 
@@ -25,13 +36,8 @@ void rebuild(Set* set) {
         }
     }
 
-
-    free(set->buckets);
-    set->load = ns->load;
-    set->size = ns->size;
-    set->buckets = ns->buckets;
-    set->bucketLength = ns->bucketLength;
-    free(ns);
+    set_overwrite(set, ns);
+    set->isUsed = true;
 }
 
 bool find(Set* set, int item, int** ptrptr) {
@@ -105,11 +111,7 @@ void set_intersect(Set* set, Set* other) {
         }
     }
     set_delete(other);
-    free(set->buckets);
-    set->buckets = ns->buckets;
-    set->load = ns->load;
-    set->size = ns->size;
-    set->bucketLength = ns->bucketLength;
+    set_overwrite(set, ns);
     set->isUsed = true;
 }
 
@@ -119,8 +121,8 @@ void set_union(Set* set, Set* other) {
             set_add(set, other->buckets[i]);
         }
     }
-    set->isUsed = true;
     set_delete(other);
+    set->isUsed = true;
 }
 
 void set_delete(Set* set) {
@@ -135,8 +137,7 @@ Set* set_copy(Set* set) {
             set_add(other, set->buckets[i]);
         }
     }
+    other->isUsed = set->isUsed;
     return other;
 }
-
-
 

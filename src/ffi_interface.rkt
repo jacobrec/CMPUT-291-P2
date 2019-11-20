@@ -10,33 +10,23 @@
   setup_databases
   cleanup_databases)
 
-; struct set {
-;   int* buckets;
-;   int bucketLength;
-;   int size;
-;   bool isUsed;
-; }
-(define-cstruct _set ([buckets      (_ptr io _int)]
-                      [bucketLength _int]
-                      [size         _int]
-                      [isUsed       _bool]))
 
 (define libdb (ffi-lib "libdb"))
 (define-ffi-definer define-jbdb (ffi-lib "./jbdblib"))
 
 (define-jbdb setup_databases (_fun -> _pointer))
-(define-jbdb queryTerm (_fun _pointer (_ptr io _set) _string _int _bool
-                             -> (_ptr io _set)))
+(define-jbdb queryTerm (_fun _pointer _pointer _string _int _bool
+                             -> _pointer))
 (define-jbdb queryTerm2
-             (_fun _pointer (_ptr io _set) _string _string _int _bool
-                   -> (_ptr io _set)))
-(define-jbdb display_set (_fun _pointer (_ptr io _set) _bool -> _void))
-(define-jbdb emptyset (_fun -> (_ptr io _set)))
+             (_fun _pointer _pointer _string _string _int _bool
+                   -> _pointer))
+(define-jbdb display_set (_fun _pointer _pointer _bool -> _void))
+(define-jbdb emptyset (_fun -> _pointer))
 (define-jbdb cleanup_databases (_fun _pointer -> _void))
-(define-jbdb queryEmail (_fun _pointer (_ptr io _set) _string _int
-                              -> (_ptr io _set)))
-(define-jbdb queryDate (_fun _pointer (_ptr io _set) _string _string
-                             -> (_ptr io _set)))
+(define-jbdb queryEmail (_fun _pointer _pointer _string _int
+                              -> _pointer))
+(define-jbdb queryDate (_fun _pointer _pointer _string _string
+                             -> _pointer))
 
 (define (query-date jdb result-set rstart rend)
   (queryDate jdb result-set rstart rend))

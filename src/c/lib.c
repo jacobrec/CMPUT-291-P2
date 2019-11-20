@@ -90,7 +90,7 @@ void getItemsInRange(DB* db, Set* join,
     key.data = start;
     key.size = lstart;
     ret = dbcp->c_get(dbcp, &key, &data, DB_SET_RANGE);
-    printf("search key: %s-%s\n", start, end);
+    // printf("search key: %s-%s\n", start, end);
     do {
         errorif(ret, "dbcp->c_get");
         if (data.data != NULL &&
@@ -148,6 +148,7 @@ void getTerms(DB* db, Set* join, char* ks, int kl, bool isWild) {
         }
         ret = dbcp->c_get(dbcp, &key, &data, DB_NEXT);
     } while (ret != DB_NOTFOUND);
+    // printf("new? %d. Set size: %d\n", isNewSet, join->size);
     if (!isNewSet) {
         set_intersect(join, s);
     }
