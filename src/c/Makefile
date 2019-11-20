@@ -9,7 +9,7 @@ debug: lib.d.o set.d.o
 	$(CC) $(DFLAGS) $^ -o $@
 
 jbdblib.so: lib.o set.o
-	$(CC) $(FLAGS) -ldb $^ -shared -o $@
+	$(CC) $(FLAGS) $^ -shared -o $@ -ldb
 
 %.o: %.c
 	$(CC) $(FLAGS) -c $^
