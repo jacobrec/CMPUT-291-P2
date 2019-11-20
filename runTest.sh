@@ -23,7 +23,7 @@ function testProject () {
     comp recs $1
 
 }
-testProject 10
-# testProject 1k
+# testProject 10
+testProject 1k
 echo "Testing Complete"
 
