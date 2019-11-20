@@ -1,4 +1,6 @@
 #lang racket
+(require readline)
+(require readline/readline)
 (require "globals.rkt")
 (require "ffi_interface.rkt")
 (require "parser.rkt")
@@ -17,8 +19,8 @@
     [(brief) (set! full-output #f)]))
 
 (define (main)
-  (display "> ")
-  (define input (read-line))
+  (define input (readline "> "))
+  (add-history input)
   (unless (or (eof-object? input) (string=? input "exit"))
     (define cmd (command input))
     (if (or (eq? 'fail (car cmd))
