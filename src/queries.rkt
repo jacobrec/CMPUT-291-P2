@@ -4,6 +4,12 @@
 (provide do-query)
 
 (define (optimize queries)
+  ;; TODO: add optimizations
+  ; Ideas:
+  ; - Within terms, remove total subsets. ("ga" "subj:ga") -> ("ga")
+  ;                                       ("ga%" "ga") -> ("ga%")
+  ; - Change email queries to check other email fields in the c before adding to set?
+  ; - Change all date into a single date range
   queries)
 
 (define (do-query querys full-output)
