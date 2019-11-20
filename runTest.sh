@@ -7,13 +7,14 @@ make > /dev/null
 cd ../ # in src
 
 cd ../testing
+rm *.idx -f
 
 function comp () {
-    diff $2-$1.txt $1.txt
+    diff $2-$1.txt ../output/$1.txt
 }
 function testProject () {
     cd ../
-    ./buildAndRun.sh $1
+    ./doProject.sh testing/$1.xml
     cd testing
 
     # Test Phase 1

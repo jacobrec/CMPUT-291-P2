@@ -6,7 +6,6 @@
 #include <db.h>
 #include "set.h"
 
-#define PATH "../testing/"
 
 struct database {
     DB* terms;
@@ -43,10 +42,10 @@ void cleanup(DB** db) {
 
 // setup the struct containing all databases
 void setup(JDB* jdb) {
-    setupDB(&jdb->terms, PATH"te.idx", DB_BTREE);
-    setupDB(&jdb->emails, PATH"em.idx", DB_BTREE);
-    setupDB(&jdb->dates, PATH"da.idx", DB_BTREE);
-    setupDB(&jdb->recs, PATH"re.idx", DB_HASH);
+    setupDB(&jdb->terms, "te.idx", DB_BTREE);
+    setupDB(&jdb->emails, "em.idx", DB_BTREE);
+    setupDB(&jdb->dates, "da.idx", DB_BTREE);
+    setupDB(&jdb->recs, "re.idx", DB_HASH);
 }
 
 // clean up the struct containing all the databases
