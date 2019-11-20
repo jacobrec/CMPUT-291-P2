@@ -6,6 +6,7 @@
 (provide jdb
   emptyset
   query-term
+  query-email
   setup_databases
   cleanup_databases)
 
@@ -32,6 +33,14 @@
 (define-jbdb display_set (_fun _pointer (_ptr io _set) _bool -> _void))
 (define-jbdb emptyset (_fun -> (_ptr io _set)))
 (define-jbdb cleanup_databases (_fun _pointer -> _void))
+(define-jbdb queryEmail (_fun _pointer (_ptr io _set) _string _int
+                              -> (_ptr io _set)))
+
+(define (query-email jdb result-set term type)
+  (define (query r-set m-term)
+    (queryEmail jdb r-set m-term (string-length m-term)))
+  (query result-set (string-append type "-" term)))
+
 
 (define (query-term jdb result-set term type wild?)
   (define (query r-set m-term)

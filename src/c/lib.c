@@ -11,6 +11,8 @@
 struct database {
     DB* terms;
     DB* recs;
+    DB* emails;
+    DB* dates;
 };
 typedef struct database JDB;
 
@@ -51,6 +53,8 @@ void cleanup(DB** db) {
 // setup the struct containing all databases
 void setup(JDB* jdb) {
     setupDB(&jdb->terms, PATH"te.idx", DB_BTREE);
+    setupDB(&jdb->emails, PATH"em.idx", DB_BTREE);
+    setupDB(&jdb->dates, PATH"da.idx", DB_BTREE);
     setupDB(&jdb->recs, PATH"re.idx", DB_HASH);
 }
 
@@ -58,6 +62,8 @@ void setup(JDB* jdb) {
 void cleanup_databases(JDB* jdb) {
     cleanup(&jdb->terms);
     cleanup(&jdb->recs);
+    cleanup(&jdb->dates);
+    cleanup(&jdb->emails);
     free(jdb);
 }
 
@@ -175,6 +181,13 @@ Set* queryTerm2(JDB* jdb, Set* set,
     getTerms(jdb->terms, set, search, searchLen, isWild);
     getTerms(jdb->terms, other, search2, searchLen, isWild);
     set_union(set, other);
+    return set;
+}
+
+// Queries by email, expects search to be in the form s-term
+// or b-term
+Set* queryEmail(JDB* jdb, Set* set, char* search, int searchLen) {
+    getTerms(jdb->emails, set, search, searchLen, false);
     return set;
 }
 
