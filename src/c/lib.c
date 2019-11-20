@@ -16,15 +16,6 @@ struct database {
 };
 typedef struct database JDB;
 
-// ls: For debugging only
-void ls() {
-    char *args[2];
-    args[0] = "/bin/ls";
-    args[1] = NULL;
-    if (fork() == 0)
-        execv(args[0], args);
-}
-
 // Print database error message only if there is one
 // Used on the result of any db-> call
 void errorif(int x, const char* msg) {

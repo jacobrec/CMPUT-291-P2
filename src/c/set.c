@@ -13,7 +13,9 @@ Set* set_new_size(int bl) {
     s->load = 0;
     s->size = 0;
     s->isUsed = true;
+    return s;
 }
+
 void rebuild(Set* set) {
     Set* ns = set_new_size(set->bucketLength * 3.14);
 
