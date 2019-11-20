@@ -18,4 +18,5 @@ void set_clear(Set* set);
 void set_intersect(Set* set, Set* other);
 void set_union(Set* set, Set* other);
 void set_delete(Set* set);
+Set* set_copy(Set* set);
 #endif

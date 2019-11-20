@@ -92,17 +92,19 @@ void getTerms(DB* db, Set* join, char* ks, int kl, bool isWild) {
     }
 
     key.data = ks;
-    key.size = kl-1;
+    key.size = kl;
     ret = dbcp->c_get(dbcp, &key, &data, DB_SET_RANGE);
     do {
         errorif(ret, "dbcp->c_get");
-        if (data.data != NULL && (strncmp(ks, key.data, kl-1) == 0) &&
+        //printf("search key: %s[%d]\n", ks, kl);
+        if (data.data != NULL && (strncmp(ks, key.data, kl) == 0) &&
                 (isWild || strlen(ks) == key.size)) {
             set_add(s, dataToNumber(data.data, data.size));
             /* // debug printing
-            printf("key: %.*s | data: %d\n",
+            printf("key: %.*s | data: %d | match with(%s): %d\n",
                      key.size, (char*)key.data,
-                    dataToNumber(data.data, data.size));
+                    dataToNumber(data.data, data.size),
+                    ks, strncmp(ks, key.data, kl-1));
             // */
         } else {
             break;
@@ -139,7 +141,11 @@ void display_row(JDB* jdb, int row, bool fullMode) {
     ret = dbcp->c_get(dbcp, &key, &data, DB_SET);
     errorif(ret, "cursor");
 
-    printf("Row[%d]: %.*s\n", row, data.size, data.data);
+    if (fullMode) {
+        printf("Row[%d]: %.*s\n", row, data.size, data.data);
+    } else {
+        printf("Row[%d]: TODO [print subject]\n", row);
+    }
 }
 
 // Display the whole set, if time, do some nice box drawing formatting
@@ -156,17 +162,13 @@ Set* queryTerm(JDB* jdb, Set* set,
     getTerms(jdb->terms, set, search, searchLen, isWild);
     return set;
 }
-
-Set* query(Set* set, JDB* jdb) {
-
-    Set* s = set_new();
-    set_add(s, 5);
-    set_add(s, 11);
-    set_add(s, 12);
-    set_add(s, 13);
-    //display_set(jdb, s, false);
-
-    return s;
+Set* queryTerm2(JDB* jdb, Set* set,
+        char* search, char* search2, int searchLen, bool isWild) {
+    Set* other = set_copy(set);
+    getTerms(jdb->terms, set, search, searchLen, isWild);
+    getTerms(jdb->terms, other, search2, searchLen, isWild);
+    set_union(set, other);
+    return set;
 }
 
 Set* emptyset() {

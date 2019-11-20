@@ -119,5 +119,15 @@ void set_delete(Set* set) {
     free(set);
 }
 
+Set* set_copy(Set* set) {
+    Set* other = set_new();
+    for (int i = 0; i < set->bucketLength; i++) {
+        if (set->buckets[i] > 0) {
+            set_add(other, set->buckets[i]);
+        }
+    }
+    return other;
+}
+
 
 
