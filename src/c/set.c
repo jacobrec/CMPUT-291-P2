@@ -10,6 +10,7 @@ Set* set_new_size(int bl) {
     s->bucketLength = bl;
     s->buckets = malloc(sizeof(int) * s->bucketLength);
     memset(s->buckets, 0, sizeof(int) * s->bucketLength);
+    s->load = 0;
     s->size = 0;
     s->isUsed = true;
 }
@@ -24,6 +25,7 @@ void rebuild(Set* set) {
 
 
     free(set->buckets);
+    set->load = ns->load;
     set->size = ns->size;
     set->buckets = ns->buckets;
     set->bucketLength = ns->bucketLength;
@@ -31,16 +33,17 @@ void rebuild(Set* set) {
 }
 
 bool find(Set* set, int item, int** ptrptr) {
-    int key = item % set->bucketLength;
     int* ptr = *ptrptr;
-    ptr = &set->buckets[key];
 
+    int index = item;
+    ptr = &set->buckets[index % set->bucketLength];
     while (*ptr != 0) {
         if (*ptr == item) {
             *ptrptr = ptr;
             return true;
         }
-        ptr += sizeof(int);
+        index++;
+        ptr = &set->buckets[index % set->bucketLength];
     }
 
     *ptrptr = ptr;
@@ -48,7 +51,7 @@ bool find(Set* set, int item, int** ptrptr) {
 }
 
 Set* set_new() {
-    Set* s = set_new_size(100);
+    Set* s = set_new_size(128);
     s->isUsed = false;
     return s;
 }
@@ -58,10 +61,11 @@ void set_add(Set* set, int item) {
     set->isUsed = true;
     if (!find(set, item, &ptr)) {
         *ptr = item;
+        set->load++;
         set->size++;
     }
 
-    if (set->size * 2 > set->bucketLength) {
+    if (set->load > set->bucketLength * 0.75) {
         rebuild(set);
     }
 }
@@ -71,6 +75,7 @@ void set_remove(Set* set, int item) {
     set->isUsed = true;
     if (find(set, item, &ptr)) {
         *ptr = -1;
+        set->size--;
     }
 }
 
@@ -81,6 +86,7 @@ bool set_has(Set* set, int item) {
 
 void set_clear(Set* s) {
     s->bucketLength = 100;
+    s->load = 0;
     s->size = 0;
     s->buckets = realloc(s->buckets, sizeof(int) * s->bucketLength);
     s->isUsed = false;
@@ -99,6 +105,7 @@ void set_intersect(Set* set, Set* other) {
     set_delete(other);
     free(set->buckets);
     set->buckets = ns->buckets;
+    set->load = ns->load;
     set->size = ns->size;
     set->bucketLength = ns->bucketLength;
     set->isUsed = true;
