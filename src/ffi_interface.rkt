@@ -35,12 +35,16 @@
 (define-jbdb cleanup_databases (_fun _pointer -> _void))
 (define-jbdb queryEmail (_fun _pointer (_ptr io _set) _string _int
                               -> (_ptr io _set)))
+(define-jbdb queryDate (_fun _pointer (_ptr io _set) _string _string
+                             -> (_ptr io _set)))
+
+(define (query-date jdb result-set rstart rend)
+  (queryDate jdb result-set rstart rend))
 
 (define (query-email jdb result-set term type)
   (define (query r-set m-term)
     (queryEmail jdb r-set m-term (string-length m-term)))
   (query result-set (string-append type "-" term)))
-
 
 (define (query-term jdb result-set term type wild?)
   (define (query r-set m-term)

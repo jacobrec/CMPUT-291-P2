@@ -77,6 +77,47 @@ int dataToNumber(char* data, int len) {
 }
 
 /**
+ * This function will get all items in the database whose keys are between two
+ * search paramaters. The ranges are [start, end)
+ */
+void getItemsInRange(DB* db, Set* join,
+        char* start, int lstart, char* end, int lend) {
+    int ret;
+    DBC* dbcp;
+    ret = db->cursor(db, NULL, &dbcp, 0);
+    errorif(ret, "cursor");
+    DBT key, data;
+    memset(&key, 0, sizeof(key));
+    memset(&data, 0, sizeof(data));
+    bool isNewSet = !join->isUsed;
+    Set* s;
+    if (isNewSet) {
+        s = join;
+    } else {
+        s = set_new();
+    }
+
+    key.data = start;
+    key.size = lstart;
+    ret = dbcp->c_get(dbcp, &key, &data, DB_SET_RANGE);
+    printf("search key: %s-%s\n", start, end);
+    do {
+        errorif(ret, "dbcp->c_get");
+        if (data.data != NULL &&
+                strncmp(end, key.data, 10) > 0) {
+            set_add(s, dataToNumber(data.data, data.size));
+        } else {
+            break;
+        }
+        ret = dbcp->c_get(dbcp, &key, &data, DB_NEXT);
+    } while (ret != DB_NOTFOUND);
+    if (!isNewSet) {
+        set_intersect(join, s);
+    }
+}
+
+
+/**
  * This function will get iterate over all the items whose term is equal to the
  * key. If isWild is set, it will also iterate over items whose key begins with
  * the key. This will be used for the term queries.
@@ -188,6 +229,13 @@ Set* queryTerm2(JDB* jdb, Set* set,
 // or b-term
 Set* queryEmail(JDB* jdb, Set* set, char* search, int searchLen) {
     getTerms(jdb->emails, set, search, searchLen, false);
+    return set;
+}
+
+// Queries by email, expects search to be in the form s-term
+// or b-term
+Set* queryDate(JDB* jdb, Set* set, char* datestart, char* dateend) {
+    getItemsInRange(jdb->dates, set, datestart, 10, dateend, 10);
     return set;
 }
 
