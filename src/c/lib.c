@@ -94,7 +94,7 @@ void getItemsInRange(DB* db, Set* join,
     do {
         errorif(ret, "dbcp->c_get");
         if (data.data != NULL &&
-                strncmp(end, key.data, 10) > 0) {
+                strncmp(end, key.data, lend) > 0) {
             set_add(s, dataToNumber(data.data, data.size));
         } else {
             break;
