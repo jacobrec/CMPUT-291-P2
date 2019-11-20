@@ -1,15 +1,21 @@
+DFLAGS=-g -ldb
+FLAGS=-ldb -fPIC
+CC=gcc
 buildlib: jbdblib.so
 	mv jbdblib.so ../jbdblib.so
 	make clean
 
-debug: lib.o set.o
-	gcc -g -ldb $^ -o $@
+debug: lib.d.o set.d.o
+	$(CC) $(DFLAGS) $^ -o $@
 
 jbdblib.so: lib.o set.o
-	gcc -ldb $^ -shared -o $@
+	$(CC) $(FLAGS) $^ -shared -o $@
 
 %.o: %.c
-	gcc -ldb -g -c $^
+	$(CC) $(FLAGS) -c $^
+
+%.d.o: %.c
+	$(CC) $(DFLAGS) -c $^
 
 pclean:
 	rm *.o -f
@@ -22,7 +28,7 @@ runtest: test
 	./test
 
 test: set.o test_set.o
-	gcc test.c $^ -o test
+	$(CC) $(DFLAGS) test.c $^ -o test
 
 
 
