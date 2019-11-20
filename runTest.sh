@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm src/jbdblib.so
 cd src/c
 make runtest > /dev/null
 make > /dev/null
