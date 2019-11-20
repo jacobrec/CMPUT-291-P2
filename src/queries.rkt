@@ -83,8 +83,6 @@
   ; Ideas:
   ; - Within terms, remove total subsets. ("ga" "subj:ga") -> ("ga")
   ;                                       ("ga%" "ga") -> ("ga%")
-  ; - Change email queries to check other email fields
-  ;   in the c code before adding to set?
   (set! queries (compress-dates queries))
   queries)
 
