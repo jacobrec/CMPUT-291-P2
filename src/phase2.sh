@@ -14,11 +14,18 @@ function make_hash () {
 
 rm *.idx -f
 
-make_btree terms.txt te.idx
+make_btree terms.txt te.idx &
+pids[0]=$!
 
-make_hash recs.txt re.idx
+make_hash recs.txt re.idx &
+pids[1]=$!
 
-make_btree emails.txt em.idx
+make_btree emails.txt em.idx &
+pids[2]=$!
 
-make_btree dates.txt da.idx
+make_btree dates.txt da.idx &
+pids[3]=$!
 
+for pid in ${pids[*]}; do
+    wait $pid
+done

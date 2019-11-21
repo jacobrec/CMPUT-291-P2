@@ -14,6 +14,7 @@ function run() {
     if [ -z "$FILE" ]; then
         echo "Please provide a filepath to the xml"
     else
+        date
         mkdir -p output
         # Build jbdblib.so
         echo ""
