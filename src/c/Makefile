@@ -1,6 +1,6 @@
 DFLAGS=-g -ldb
 FLAGS=-fPIC -Wall
-CC=clang
+CC=gcc
 buildlib: jbdblib.so
 	mv jbdblib.so ../jbdblib.so
 	make clean
