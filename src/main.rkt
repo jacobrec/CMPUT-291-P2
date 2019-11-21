@@ -20,7 +20,7 @@
 
 (define (main)
   (define input (readline "> "))
-  (unless (or (eof-object? input) (string=? input "exit"))
+  (unless (or (eof-object? input) (string=? input "!exit"))
     (add-history input)
     (define cmd (command input))
     (if (or (eq? 'fail (car cmd))
