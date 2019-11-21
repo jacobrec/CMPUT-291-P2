@@ -1,13 +1,13 @@
 #!/bin/bash
 
 function make_btree () {
-    sort -u $1              |
+    LC_ALL=C sort -u $1              |
         ../src/break.pl     |
         db_load -c duplicates=1 -T -t btree $2
 }
 
 function make_hash () {
-    sort -u $1              |
+    LC_ALL=C sort -u $1              |
         ../src/break.pl     |
         db_load -T -t hash $2
 }
