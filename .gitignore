@@ -11,6 +11,7 @@ testing/emails.txt
 testing/recs.txt
 testing/terms.txt
 testing/dates.txt
+testing/100k.xml
 testing/*.idx
 a.out
 output/

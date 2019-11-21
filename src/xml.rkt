@@ -128,7 +128,9 @@
   (string-trim
     (apply string-append
       (for/list ([v xml])
-        (string-append " " (pcdata-string v) " ")))))
+        (cond
+          [(pcdata? v) (string-append " " (pcdata-string v) " ")]
+          [(entity? v) (string-append " " (string (integer->char (entity-text v))) " ")])))))
 
 (define (phase1-process-elements element)
   (parse-terms element)
