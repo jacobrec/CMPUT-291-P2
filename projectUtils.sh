@@ -1,10 +1,8 @@
 function doPhase1() {
-    #cd output
-    #ln -s "../$1" file.xml
-    #cat file.xml | ./phase1 # Does phase 1
-    #cd ../
-
-    cat $1 | racket src/phase1.rkt # Does phase 1
+    cd output
+    ln -s "../$1" file.xml
+    cat file.xml | ./phase1 # Does phase 1
+    cd ../
 }
 
 function doPhase2() {
