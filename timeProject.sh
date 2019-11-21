@@ -1,12 +1,13 @@
 #!/bin/bash
 
+. projectUtils.sh
+
 ### This assumes it is being run from the project root directory
 
-function makeCLib() {
-    cd src/c
-    make > /dev/null
-    cd ../../
-    cp src/jbdblib.so output/jbdblib.so
+function header () {
+        echo ""
+        echo ""
+        echo "===== $1 ====="
 }
 
 FILE=$1
@@ -15,27 +16,20 @@ function run() {
         echo "Please provide a filepath to the xml"
     else
         date
+        rm -rf output
         mkdir -p output
-        # Build jbdblib.so
-        echo ""
-        echo ""
-        echo "===== Make ====="
-        time makeCLib
 
-        echo ""
-        echo ""
-        echo "===== Phase 1 ====="
-        time cat $FILE | racket src/phase1.rkt # Does phase 1
-        cd output
-        echo ""
-        echo ""
-        echo "===== Phase 2 ====="
-        time ../src/phase2.sh # Does phase 2
+        header "Make"
+        time makeCLibs
+
+        header "Phase 1"
+        time doPhase1 $FILE
+
+        header "Phase 2"
+        time doPhase2
     fi
 
-    echo ""
-    echo ""
-    echo "===== Total ====="
+    header "Total"
 }
 
 time run
