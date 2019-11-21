@@ -1,7 +1,7 @@
 CXX=g++
-FLAGS=`pkg-config --cflags --libs libxml++-3.0`
+FLAGS=/usr/lib/x86_64-linux-gnu/libxml++-2.6.so.2 -Iheaders/libxml++-2.6.1 `pkg-config --cflags --libs glibmm-2.4`
 xmlparserfast: src/main.cpp bin/parser.o bin/mail.o
-	$(CXX) $^ -o $@ $(FLAGS) -lxml++-3.0
+	$(CXX) $^ -o $@ $(FLAGS)
 
 bin:
 	mkdir bin -p
