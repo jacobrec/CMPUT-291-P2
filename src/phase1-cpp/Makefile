@@ -18,7 +18,7 @@ clean:
 	rm recs.txt
 
 test-1k: xmlparserfast
-	./xmlparserfast ../../testing/1k.xml
+	cat ../../testing/1k.xml | ./xmlparserfast
 	diff ../../testing/1k-terms.txt terms.txt
 	diff ../../testing/1k-dates.txt dates.txt
 	diff ../../testing/1k-emails.txt emails.txt
@@ -26,7 +26,7 @@ test-1k: xmlparserfast
 	make clean
 
 test-time: xmlparserfast
-	bash -c "time ./xmlparserfast ../../testing/100k.xml"
+	bash -c "time cat ../../testing/100k.xml | ./xmlparserfast"
 	make clean
 
 

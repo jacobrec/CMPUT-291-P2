@@ -7,25 +7,26 @@
 
 using namespace std;
 
-void getEmails(string emailLine, vector<string>& out) {
+void getEmails(string emailLine, ostream* out, string type, int row) {
     static string delimiter = ",";
     size_t last = 0;
     size_t next = 0;
     while ((next = emailLine.find(delimiter, last)) != string::npos) {
-        out.push_back(emailLine.substr(last, next-last));
+        *out << type << "-" << emailLine.substr(last, next-last) << ":" << row <<  '\n';
         last = next + 1;
     }
-    out.push_back(emailLine.substr(last));
+    *out << type << "-" << emailLine.substr(last) << ":" << row <<  '\n';
 }
 
-void getTerms(string terms, vector<string>& out) {
+void getTerms(string terms, ostream* out, int row, string type) {
     size_t start = 0;
     size_t end = 0;
 
     char c;
 #define PUSHIF \
     if (end > start + 2) { \
-        out.push_back(terms.substr(start, end-start)); \
+        *out << type << "-" << \
+            terms.substr(start, end-start) << ":" << row << '\n'; \
     }
 
     for (size_t i = 0; i < terms.size(); i++) {
@@ -47,20 +48,13 @@ void getTerms(string terms, vector<string>& out) {
 
 void writeEmails(string line, int row,
         string type, ostream* out) {
-    vector<string> emails;
-    getEmails(line, emails);
-    for (string s : emails) {
-        *out << type << "-" << s << ":" << row <<  '\n';
-    }
+    getEmails(line, out, type, row);
 }
 
 void writeTerms(std::string line, int row,
         std::string type, std::ostream* out) {
-    vector<string> terms;
-    getTerms(line, terms);
-    for (string s : terms) {
-        *out << type << "-" << s << ":" << row << '\n';
-    }
+    getTerms(line, out, row, type);
+
 }
 
 void writeDate(std::string line, int row, std::ostream* out) {
