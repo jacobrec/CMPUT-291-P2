@@ -1,5 +1,6 @@
 CXX=g++
-FLAGS=/usr/lib/x86_64-linux-gnu/libxml++-2.6.so.2 -Iheaders/libxml++-2.6.1 `pkg-config --cflags --libs glibmm-2.4`
+LFLAGS=-Iheaders/libxml++-2.6.1 `pkg-config --cflags --libs glibmm-2.4` -Ofast
+FLAGS=/usr/lib/x86_64-linux-gnu/libxml++-2.6.so.2 $(LFLAGS)
 xmlparserfast: src/main.cpp bin/parser.o bin/mail.o
 	$(CXX) $^ -o $@ $(FLAGS)
 
@@ -7,7 +8,7 @@ bin:
 	mkdir bin -p
 
 bin/%.o: src/%.cpp src/%.hpp bin
-	$(CXX) $(FLAGS) $< -c -o $@
+	$(CXX) $< -c -o $@ $(LFLAGS)
 
 clean:
 	rm bin -rf

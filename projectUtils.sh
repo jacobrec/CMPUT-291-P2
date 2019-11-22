@@ -24,7 +24,7 @@ function makeCLibs() {
     cp src/jbdblib.so output/jbdblib.so
 
     cd src/phase1-cpp
-    make > /dev/null
+    make > /dev/null 2>&1
     cd ../../
     cp src/phase1-cpp/xmlparserfast output/phase1
 }
