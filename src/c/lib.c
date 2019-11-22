@@ -234,6 +234,10 @@ Set* emptyset() {
     return set_new();
 }
 
+bool issetempty(Set* set) {
+    return set->size == 0;
+}
+
 JDB* setup_databases() {
     JDB* jdb = malloc(sizeof(JDB));
     setup(jdb);

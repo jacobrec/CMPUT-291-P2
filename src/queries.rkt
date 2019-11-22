@@ -79,18 +79,15 @@
 
 
 (define (optimize queries)
-  ;; TODO: add optimizations
-  ; Ideas:
-  ; - Within terms, remove total subsets. ("ga" "subj:ga") -> ("ga")
-  ;                                       ("ga%" "ga") -> ("ga%")
   (set! queries (compress-dates queries))
   queries)
 
 (define (do-query querys full-output)
   (set! querys (optimize querys))
   (define resultset (emptyset))
-  (displayln querys)
-  (for ([q querys])
+  (define end-it-all #f)
+  (for ([q querys]
+        #:break end-it-all)
     (cond
       [(eq? (car q) 'term)
        (set! resultset
@@ -100,5 +97,7 @@
          (query-email jdb resultset (caddr q) (cadr q)))]
       [(eq? (car q) 'date)
        (set! resultset
-         (query-date jdb resultset (cadr q) (caddr q)))]))
+         (query-date jdb resultset (cadr q) (caddr q)))])
+    (when (issetempty resultset)
+      (set! end-it-all #t)))
   (display_set jdb resultset #t))

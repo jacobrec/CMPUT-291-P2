@@ -5,6 +5,7 @@
 
 (provide jdb
   emptyset
+  issetempty
   query-term
   query-email
   setup_databases
@@ -22,6 +23,7 @@
                    -> _pointer))
 (define-jbdb display_set (_fun _pointer _pointer _bool -> _void))
 (define-jbdb emptyset (_fun -> _pointer))
+(define-jbdb issetempty (_fun -> _pointer -> _bool))
 (define-jbdb cleanup_databases (_fun _pointer -> _void))
 (define-jbdb queryEmail (_fun _pointer _pointer _string _int
                               -> _pointer))
