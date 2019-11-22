@@ -1,7 +1,10 @@
 function doPhase1() {
     cd output
-    ln -s "../$1" file.xml
-    cat file.xml | ./phase1 # Does phase 1
+    if [ -f "$1" ]; then
+      cat $1 | ./phase1 # Does phase 1
+    elif [ -f "../$1" ]; then
+      cat "../$1" | ./phase1 # Does phase 1
+    fi
     cd ../
 }
 
