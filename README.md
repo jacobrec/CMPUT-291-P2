@@ -1,6 +1,6 @@
 # CMPUT-291-P2
 Jacob Reckhard: reckhard
-Navras Kamal:   navras
+Navras Kamal: navras
 Radamir Wasoski: wasowski
 
 
