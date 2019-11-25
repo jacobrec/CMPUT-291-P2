@@ -22,7 +22,7 @@ function doPhase3() {
 
 function makeCLibs() {
     cd src/c
-    make > /dev/null
+    make > /dev/null 2>&1
     cd ../../
     cp src/jbdblib.so output/jbdblib.so
     cp src/libparser_api.so output/libparser_api.so
