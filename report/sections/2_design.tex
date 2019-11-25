@@ -1,5 +1,32 @@
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[scale=0.5]{flow_dot.png}
 	\caption{Program flow}\label{fig:use_flow}
 \end{figure}
+
+The design of the database system is created in such a way to maximize efficiency and 
+speed while still being user friendly and working as expected.  When the user enters 
+a query formatted as above, the query is parsed then put through an optimizer.  This 
+optimizer combines date queries into a single date range.  Note that each query only 
+allows up to one date range.  
+
+The optimizer then reorders the queries putting queries 
+that are most likely to return no results first.  This ends up with date being the 
+first query to be handled, returning all results within the range.  After that, the 
+queries regarding email address are handled, then finally keyword queries are handled.  
+In a multi-part query the system will take the result of each query and take the 
+intersection of the result and that of the previous query.  If at any point this 
+intersection results in an empty set, the querying terminates, as additional queries 
+will not give any more results and will just waste time / computation.  
+
+When the query is completed it will return the result to the user.  The format of the 
+result is determined by the output mode (see User Guide for more information).  If the 
+result is blank (ie. no output) that means that the result of the optimizer returned 
+an empty set.  Thus your subqueries contained no intersection with one another, and there 
+was no values in the database that simultaneously satisfied all subqueries.  On the other 
+hand, if the program returns an error \verb|DB_NOTFOUND| that means that one of your 
+subqueries failed to return any values at all, meaning there was no values in the database 
+that satisfied it once it had been run through the optimizer.  Finally if there was a 
+syntax error that means your query was not properly formatted.  See the User Guide for 
+more information.  For example, a query \verb|date<2000/01/01 date:2000/12/12| will 
+contain no intersections and thus return nothing. 
