@@ -241,8 +241,8 @@ Set* emptyset() {
     return set_new();
 }
 
-bool issetempty(Set* set) {
-    return set->size == 0;
+bool setsize(Set* set) {
+    return set->size;
 }
 
 JDB* setup_databases() {

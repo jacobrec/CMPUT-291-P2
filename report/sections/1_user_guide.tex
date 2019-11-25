@@ -1,0 +1,88 @@
+This application has two main parts to it's operation.  The first is the data preparation stage
+and the second is the actual searching and operation of the program.  Navigation of the program
+can be done using the keyboard, and it is designed to be used within the terminal.  When 
+inputting commands be sure to follow the syntax guide described below. 
+
+\subsection{Starting the Program}
+In order to set up the program you should locate the xml file you would wish, then run doProject.sh
+with the input parameter as the path ro the xml file.  For example 
+\verb|./doProject.sh /path/to/file.xml|.  Once that is done, wait for each of the parts to complete
+parsing and indexing the file.  Once that is completed you will be presented with a promt in the 
+form of \verb|> |, where you will be able to enter commands as described below.  
+
+\subsection{Program Operation}
+This program has multiple parameters and inputs that can be used for searching your data set.
+
+\textbf{Navigation: }
+When using the program, you can press the up and down arrow keys to reuse previously entered 
+commands. 
+
+\textbf{Keyword Searching: }
+If you enter a word without special characters it will return all emails containing that word
+in either the subject or the body.  The word must be more than 2 characters long to return a 
+result.  If you would like to be more specific you can use either \verb|subj:| to search only
+the subject lines for the given keyword, or use \verb|body:| to search only the body.  
+
+You can also use the wildcard character \verb|%| at the end of a keyword to find any results that 
+contain the preceeding character sequence.  This can be combined with \verb|subj:| and 
+\verb|body:|, for example: \verb|subj:test%| will return emails that contain "test", "tests", 
+"testing", "tester"... or any other word that starts with "test" in the subject.  Note that 
+using the wildcard you can perform a query such as \verb|i%|, but it will not return emails 
+containing words like "is", "it", or similar, as 2 character words are not indexed (as per the 
+spec).  Also, the command \verb|%| is not valid, as there must be at least one preceeding valid 
+character.  
+
+\textbf{Email Address Searching: }
+If you would like to search based on an email address make sure you know the full email address 
+for the person you would like to contact, as wildcards are not permitted in these searches.  
+\begin{itemize}
+	\item To find emails sent by a particular person, use \verb|from:|
+	\item To find emails sent to a particular person, use \verb|to:|
+	\item To find emails CC'd to a particular person, use \verb|cc:|
+	\item To find emails BCC'd to a particular person, use \verb|bcc:|
+\end{itemize}
+Followed by the email address of the person in question.  For example \verb|from:person@example.com| 
+will return all emails sent by "person@example.com".  
+
+\textbf{Date Searching: }
+You are able to search emails based on when they are dated as well.  Dates are formatted as 
+\verb|YYYY/MM/DD|, and the command to search dates is \verb|date| followed by one of the following 
+operators.  
+\begin{itemize}
+	\item \verb|:| returns emails matching the date exactly
+	\item \verb|<| returns emails sent before the given date
+	\item \verb|<=| returns emails sent before or on the given date
+	\item \verb|>| returns emails send after the given date
+	\item \verb|>=| returns emails send after or on the given date
+\end{itemize}
+Followed by the date in question.  For example \verb|date>2012/01/02| will return all emails dated 
+after January 2nd, 2012.  
+
+\textbf{Combined Queries: }
+You are able to enter more than one command on a line in order to combine them.  Each query is 
+space separated.  These queries are evaluated, then their results are combined to the intersection 
+of all outputs.  This means that it will only return results that every single query on the line 
+matched with.  In addition, this means that if a query results is an empty set (no results) a 
+combined query containing it will also return nothing.  
+
+This allows you you perform more complex searches.  For example, if you wanted to find all emails 
+that are sent by john.arnold@enron.com between 1999/01/01 (exclusive) and 2010/12/31 (inclusive) 
+containing any word starting with "confident" in the body, you can use the following query:
+
+\verb|from:john.arnold@enron.com date>1999/01/01 date<=2010/12/31 body:confident%|
+
+Note that each query can only support one date range, for example 
+
+\verb|date<2000/01/01 date:2005/01/01 date>2010/01/01| will return no results, as the 
+intersection of those two ranges is null.
+
+\textbf{Mode Switching: }
+To switch between output modes use the command \verb|output=| followed by either \verb|full| or 
+\verb|brief|.  \verb|output=full| will cause all commands entered to return the XML dump of all 
+matching emails, while \verb|output=brief| will only return the id and subject line of the matching 
+emails.  The default mode is brief, and being in brief mode will not change your ability to search 
+the body of emails you are interested in, as it only changes how the output is displayed, not how 
+the queries are handled. 
+
+\textbf{Exiting: }
+To close the program, enter !exit into the prompt, or use CTRL-D (not recommended).   

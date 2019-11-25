@@ -98,6 +98,6 @@
       [(eq? (car q) 'date)
        (set! resultset
          (query-date jdb resultset (cadr q) (caddr q)))])
-    (when (issetempty resultset)
+    (when (= 0 (setsize resultset))
       (set! end-it-all #t)))
   (display_set jdb resultset full-output))
