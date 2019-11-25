@@ -91,7 +91,7 @@
     (cond
       [(eq? (car q) 'term)
        (set! resultset
-         (query-term jdb resultset (caddr q) (cadr q) (cadddr q)))]
+         (query-term jdb resultset (string-foldcase (caddr q)) (cadr q) (cadddr q)))]
       [(eq? (car q) 'email)
        (set! resultset
          (query-email jdb resultset (caddr q) (cadr q)))]
