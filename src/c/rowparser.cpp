@@ -1,13 +1,8 @@
 #include "rowparser.h"
 
-#include <vector>
 #include <iostream>
 
 //C++ Implementations, if necessary
-std::vector<std::string> fields;
-std::vector<std::string> datas;
-bool fullOutput;
-
 RSaxParser::RSaxParser(bool outMode) : xmlpp::SaxParser() {
 //Initialize fields field?
     fullOutput = outMode;
@@ -15,34 +10,57 @@ RSaxParser::RSaxParser(bool outMode) : xmlpp::SaxParser() {
 
 RSaxParser::~RSaxParser() {}
 
-const char** RSaxParser::sendData(u_int32_t* itemCount){
-    *itemCount = datas.size();
-    const char** all = new const char*[*itemCount];
-    for(uint32_t i = 0; i < *itemCount; i++){
-        all[i] = datas[i].c_str();
+std::ostream& operator<<(std::ostream& os, const RSaxParser& obj){
+    if(obj.fullOutput){
+        os << "Row[" << obj.datas[0] << "]: ";
+        for(uint32_t i = 1; i < obj.datas.size()-1; i++){
+            os << obj.datas[i] << " | ";
+        }
+        //workaround because operator << incessantly
+        //converts &#10; into literal newlines
+        os << obj.datas[obj.datas.size()-1];
     }
-    return all;
+    else{
+        os << "Row[" << obj.datas[0] << "]: " << obj.datas[1];
+    }
+    return os;
 }
 
 void RSaxParser::on_start_document() {}
 void RSaxParser::on_end_document() {}
 void RSaxParser::on_start_element(const Glib::ustring& name,
         const AttributeList& properties) {
-    std::cout << name << "\n";
     if(fullOutput || name == "subj" || name == "row"){
         fields.push_back(name);
+    }
+    currentTag = name;
+}
+
+void replaceAll(std::string& str, const std::string& from,
+        const std::string& to) {
+    if(from.empty())
+        return;
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length();
     }
 }
 void RSaxParser::on_end_element(const Glib::ustring& name) {
     if(fields.size() != datas.size()){
         datas.push_back("");
     }
+    replaceAll(datas[datas.size()-1], "\n", "&#10;");
+    replaceAll(datas[datas.size()-1], "'", "&apos;");
+    replaceAll(datas[datas.size()-1], "\"", "&quot;");
 }
 void RSaxParser::on_characters(const Glib::ustring& text) {
-    if(fields.size() != datas.size()){
-        datas.push_back(text);
-    }else{
-        datas[datas.size()-1].append(text);
+    if(fullOutput || currentTag == "subj" || currentTag == "row"){
+        if(fields.size() != datas.size()){
+            datas.push_back(text);
+        }else{
+            datas[datas.size()-1].append(text);
+        }
     }
 }
 void RSaxParser::on_comment(const Glib::ustring& text) {}

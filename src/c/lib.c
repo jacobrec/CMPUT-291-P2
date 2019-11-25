@@ -5,7 +5,7 @@
 #include <math.h>
 #include <db.h>
 #include "set.h"
-//#include "parser_api.h"
+#include "parser_api.h"
 
 
 struct database {
@@ -179,6 +179,8 @@ void display_row(JDB* jdb, int row, bool fullMode) {
 
     ret = dbcp->c_get(dbcp, &key, &data, DB_SET);
     errorif(ret, "cursor");
+
+    //parser->parseRow((char*)data.data, data.size);
 
     if (fullMode) {
         //No pretty printing...

@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "rowparser.h"
 #include "parser_api.h"
 
@@ -13,11 +15,10 @@ extern "C" {
     }
     void cleanParser(struct RSaxParser* parser){ delete parser; }
 
-    const char** parseRow(struct RSaxParser* parser, char* data, u_int32_t size,
-            u_int32_t* itemCount){
+    void parseRow(struct RSaxParser* parser, char* data, size_t size){
         parser->parse_chunk(Glib::ustring(data, size));
         parser->finish_chunk_parsing();
-        return parser->sendData(itemCount);
+        std::cout << *parser << '\n';
     }
 
 #ifdef __cplusplus

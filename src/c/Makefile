@@ -16,7 +16,7 @@ jbdblib.so: lib.o set.o libparser_api.so
 	$(CC) $(FLAGS) $^ -shared -o $@ -ldb -L. -lparser_api -Wl,-rpath=.
 
 libparser_api.so: rowparser.cpp parser_api.cpp
-	$(CXX) $(FLAGS) $(CXXFLAGS) -shared $^ -o $@
+	$(CXX) $(FLAGS) $(CXXFLAGS) -shared $^ -o $@ -Wl,-rpath=/usr/lib/x86_64-linux-gnu/
 
 %.o: %.c
 	$(CC) $(FLAGS) -c $^
@@ -34,8 +34,8 @@ clean: pclean
 runtest: test
 	./test
 
-test: set.o test_set.o
-	$(CC) $(DFLAGS) test.c $^ -o test
+test: set.o test_set.o test_api.o libparser_api.so
+	$(CC) $(DFLAGS) test.c $^ $(CXXFLAGS) -o test -Wl,-rpath=.
 
 
 

@@ -1,11 +1,16 @@
 #include <libxml++/libxml++.h>
+#include <vector>
+#include <iostream>
 
 class RSaxParser : public xmlpp::SaxParser {
 public:
+    std::vector<std::string> fields;
+    std::vector<std::string> datas;
+    bool fullOutput;
+    std::string currentTag;
+
     RSaxParser(bool outMode);
     ~RSaxParser() override;
-
-    const char** sendData(u_int32_t* itemCount);
 
 protected:
     //overrides:
@@ -20,3 +25,4 @@ protected:
     void on_error(const Glib::ustring& text) override;
     void on_fatal_error(const Glib::ustring& text) override;
 };
+std::ostream& operator<<(std::ostream& os, const RSaxParser& obj);

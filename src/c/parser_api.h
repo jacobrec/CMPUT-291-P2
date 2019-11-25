@@ -2,10 +2,11 @@
 extern "C" {
 #endif
 
+    #include <stdbool.h>
+
     struct RSaxParser* makeParser(bool outMode);
     void cleanParser(struct RSaxParser* parser);
-    const char** parseRow(struct RSaxParser* parser, char* data, u_int32_t size, 
-            u_int32_t* itemCount);
+    void parseRow(struct RSaxParser* parser, char* data, size_t size);
 
 #ifdef __cplusplus
 }
