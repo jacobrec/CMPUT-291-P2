@@ -5,6 +5,7 @@
 #include <math.h>
 #include <db.h>
 #include "set.h"
+//#include "parser_api.h"
 
 
 struct database {
@@ -180,19 +181,25 @@ void display_row(JDB* jdb, int row, bool fullMode) {
     errorif(ret, "cursor");
 
     if (fullMode) {
+        //No pretty printing...
         printf("Row[%d]: %.*s\n", row, data.size, (char*)data.data);
     } else {
-        printf("Row[%d]: TODO [print subject]\n", row);
+        //Hazardous if the xml is malformed
+        char* openP = strstr((char*) data.data, "<subj>")+6;
+        char* closeP = strstr((char*) data.data, "</subj>");
+        printf("Row[%d]: %.*s\n", row, closeP-openP, openP);
     }
 }
 
 // Display the whole set, if time, do some nice box drawing formatting
 void display_set(JDB* jdb, Set* s, bool fullMode) {
+    //struct RSaxParser* parser = makeParser(fullMode);
     for (int i = 0; i < s->bucketLength; i++) {
         if (s->buckets[i] > 0) {
             display_row(jdb, s->buckets[i], fullMode);
         }
     }
+    //cleanParser(parser);
 }
 
 // Queries by term, expects search to be in the form s-term
