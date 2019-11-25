@@ -25,6 +25,7 @@ function makeCLibs() {
     make > /dev/null
     cd ../../
     cp src/jbdblib.so output/jbdblib.so
+    cp src/libparser_api.so output/libparser_api.so
 
     cd src/phase1-cpp
     make > /dev/null 2>&1
