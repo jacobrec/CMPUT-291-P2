@@ -3,7 +3,7 @@ build: clean
 	make report.pdf
 	make pclean
 
-%.pdf: %.tex $(SECS)
+%.pdf: %.tex flow_dot.png $(SECS)
 	pdflatex $<
 
 %_dot.png: %.dot

@@ -1,0 +1,23 @@
+digraph {
+    start [label=<<u>Start</u>>];
+
+    prompt [label=<<u>Prompt</u><br/>
+- Gets user Input>];
+
+    optimizer [label=<<u>Query Optimizer</u><br/>
+- Combine dates<br/>
+- Reorder Queries>];
+
+    query_database [label=<<u>Query Database</u><br/>
+- Gets result from first query into set<br/>
+- Intersects results with previous query<br/>
+- Breaks early if a query is ever empty>];
+
+    end [label=<<u>End</u>>];
+
+    start -> prompt;
+    prompt -> optimizer;
+    optimizer -> query_database;
+    query_database -> prompt;
+    prompt -> end;
+}
