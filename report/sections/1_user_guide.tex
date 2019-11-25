@@ -1,13 +1,13 @@
 This application has two main parts to it's operation.  The first is the data preparation stage
 and the second is the actual searching and operation of the program.  Navigation of the program
 can be done using the keyboard, and it is designed to be used within the terminal.  When 
-inputting commands be sure to follow the syntax guide described below. 
+inputting commands, be sure to follow the syntax guide described below. 
 
 \subsection{Starting the Program}
 In order to set up the program you should locate the xml file you would wish, then run doProject.sh
-with the input parameter as the path ro the xml file.  For example 
+with the input parameter as the path to the xml file.  For example 
 \verb|./doProject.sh /path/to/file.xml|.  Once that is done, wait for each of the parts to complete
-parsing and indexing the file.  Once that is completed you will be presented with a promt in the 
+parsing and indexing the file.  Afterwards you will be presented with a prompt in the 
 form of \verb|> |, where you will be able to enter commands as described below.  
 
 \subsection{Program Operation}
@@ -46,23 +46,23 @@ will return all emails sent by "person@example.com".
 
 \textbf{Date Searching: }
 You are able to search emails based on when they are dated as well.  Dates are formatted as 
-\verb|YYYY/MM/DD|, and the command to search dates is \verb|date| followed by one of the following 
-operators.  
+\verb|YYYY/MM/DD|, and the command to search dates is \verb|date| followed by one of the 
+operators below:
 \begin{itemize}
 	\item \verb|:| returns emails matching the date exactly
 	\item \verb|<| returns emails sent before the given date
 	\item \verb|<=| returns emails sent before or on the given date
-	\item \verb|>| returns emails send after the given date
-	\item \verb|>=| returns emails send after or on the given date
+	\item \verb|>| returns emails sent after the given date
+	\item \verb|>=| returns emails sent after or on the given date
 \end{itemize}
-Followed by the date in question.  For example \verb|date>2012/01/02| will return all emails dated 
+followed by the date in question.  For example \verb|date>2012/01/02| will return all emails dated 
 after January 2nd, 2012.  
 
 \textbf{Combined Queries: }
 You are able to enter more than one command on a line in order to combine them.  Each query is 
 space separated.  These queries are evaluated, then their results are combined to the intersection 
 of all outputs.  This means that it will only return results that every single query on the line 
-matched with.  In addition, this means that if a query results is an empty set (no results) a 
+matched with.  In addition, this means that if a query results in an empty set (no results) then a 
 combined query containing it will also return nothing.  
 
 This allows you you perform more complex searches.  For example, if you wanted to find all emails 
@@ -74,10 +74,10 @@ containing any word starting with "confident" in the body, you can use the follo
 Note that each query can only support one date range, for example 
 
 \verb|date<2000/01/01 date:2005/01/01 date>2010/01/01| will return no results, as the 
-intersection of those two ranges is null.
+intersection of those three ranges is null.
 
 \textbf{Mode Switching: }
-To switch between output modes use the command \verb|output=| followed by either \verb|full| or 
+To switch between output modes, use the command \verb|output=| followed by either \verb|full| or 
 \verb|brief|.  \verb|output=full| will cause all commands entered to return the XML dump of all 
 matching emails, while \verb|output=brief| will only return the id and subject line of the matching 
 emails.  The default mode is brief, and being in brief mode will not change your ability to search 
