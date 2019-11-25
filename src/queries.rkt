@@ -100,4 +100,4 @@
          (query-date jdb resultset (cadr q) (caddr q)))])
     (when (issetempty resultset)
       (set! end-it-all #t)))
-  (display_set jdb resultset #t))
+  (display_set jdb resultset full-output))
