@@ -57,6 +57,21 @@ void test_set() {
     assert(set_has(a, 5));
     assert(a->size == 5);
 
+    b = set_new();
+    set_union(a, b);
+    assert(set_has(a, 1));
+    assert(set_has(a, 2));
+    assert(set_has(a, 3));
+    assert(set_has(a, 4));
+    assert(set_has(a, 5));
+    assert(a->size == 5);
+
+    set_clear(a);
+    b = set_new();
+    set_union(a, b);
+    assert(a->size == 0);
+
+    //Test Intersection
     set_clear(a);
     b = set_new();
     set_add(a, 1);
@@ -73,8 +88,18 @@ void test_set() {
     assert(!set_has(a, 5));
 
     assert(a->size == 1);
-    set_delete(a);
 
+    b = set_new();
+    set_intersect(a, b);
+    assert(a->size == 0);
+
+    set_delete(a);
+    a = set_new();
+    b = set_new();
+    set_intersect(a, b);
+    assert(a->size == 0);
+
+    //Test loading
     s = set_new();
     int edgecount = 50;
     for (int i = 0; i < edgecount; i++) {
